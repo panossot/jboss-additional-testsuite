@@ -12,7 +12,7 @@
 
     <artifactId>jboss-wildfly-ts-integ-basic</artifactId>
     <packaging>jar</packaging>
-    <name>JBoss Wildfly AdditionalTest Suite: Basic</name>
+    <name>jboss wildfly additional testsuite: basic</name>
 
     <profiles>
         

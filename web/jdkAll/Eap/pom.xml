@@ -17,7 +17,7 @@
     <artifactId>jboss-eap-additional-testsuite-web</artifactId>
     <version>1.0.0.Final-SNAPSHOT</version>
 
-    <name>JBoss Eap Application Server Additional TestSuite: Web</name>
+    <name>jboss eap server additional testsuite: web</name>
 
     <profiles>
 

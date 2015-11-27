@@ -17,7 +17,7 @@
     <artifactId>jboss-wildfly-additional-testsuite-ws</artifactId>
     <version>1.0.0.Final-SNAPSHOT</version>
 
-    <name>JBoss Wildfly Application Server Additional TestSuite: WS</name>
+    <name>jboss wildfly application server additional testsuite: ws</name>
 
     <profiles>
         

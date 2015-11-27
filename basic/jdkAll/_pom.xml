@@ -14,7 +14,7 @@
     <artifactId>jboss-eap-additional-testsuite-basic</artifactId>
     <version>1.0.0.Final-SNAPSHOT</version>
 
-    <name>JBoss Eap Application Server Additional TestSuite: basic</name>
+    <name>jboss eap server additional testsuite: basic</name>
 
     <properties>
 	<maven.compiler.source>1.8</maven.compiler.source>

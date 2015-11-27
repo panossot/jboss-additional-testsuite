@@ -14,7 +14,7 @@
     <artifactId>jboss-eap-additional-testsuite-ws</artifactId>
     <version>1.0.0.Final-SNAPSHOT</version>
 
-    <name>JBoss Eap Application Server Additional TestSuite: WS</name>
+    <name>jboss eap server additional testsuite: ws</name>
 
     <properties>
 	<maven.compiler.source>1.8</maven.compiler.source>
