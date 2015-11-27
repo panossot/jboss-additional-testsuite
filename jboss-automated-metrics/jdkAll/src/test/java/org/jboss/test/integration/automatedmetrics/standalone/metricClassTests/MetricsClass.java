@@ -14,33 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.integration.automatedmetrics.standalone.basic;
+package org.jboss.test.integration.automatedmetrics.standalone.metricClassTests;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateful;
 import org.jboss.metrics.automatedmetricsapi.Metric;
 
 /**
  *
  * @author Panagiotis Sotiropoulos
  */
-@Stateful
-@LocalBean
-public class MetricsApiSessionBean {
-
+public class MetricsClass {
     private int count = 0;
     
     private int count2 = 0;
 
-    public MetricsApiSessionBean() {
-    }
-
-    @Metric(fieldName = {"count","count2"}, groupName = "myTestGroup")
-    public int countMethod() {
-        count++;
-        count2 += 2;
-
+    public int getCount() {
         return count;
     }
 
+    @Metric(fieldName = {"count"}, groupName = "myTestGroup")
+    public synchronized void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getCount2() {
+        return count2;
+    }
+
+    @Metric(fieldName = {"count2"}, groupName = "myTestGroup")
+    public synchronized void setCount2(int count2) {
+        this.count2 = count2;
+    }
+    
 }

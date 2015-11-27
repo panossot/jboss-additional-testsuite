@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.integration.automatedmetrics.standalone.basic;
+package org.jboss.test.integration.automatedmetrics.standalone.basicTests;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -74,7 +74,7 @@ public class CacheStorageTestCase {
                     comparableObject.add(2.0);
                     boolean correct = MetricsCacheApi.compareMetricsCacheValuesByKey(groupName, key, comparableObject);
                     assertTrue("Data are not contained in cache ... ", correct);
-                }else if (key.contains("count2")) {
+                }else if (key.contains("count")) {
                     ArrayList<Object> comparableObject = new ArrayList<>();
                     comparableObject.add(1.0);
                     boolean correct = MetricsCacheApi.compareMetricsCacheValuesByKey(groupName, key, comparableObject);
@@ -90,7 +90,6 @@ public class CacheStorageTestCase {
     private void initializeMetricProperties() {
         MetricProperties metricProperties = new MetricProperties();
         metricProperties.setCacheStore("true");
-        metricProperties.setRhqServerUrl("lz-panos-jon33.bc.jonqe.lab.eng.bos.redhat.com");
         MetricsPropertiesApi.storeProperties(groupName, metricProperties);
     }
 }
