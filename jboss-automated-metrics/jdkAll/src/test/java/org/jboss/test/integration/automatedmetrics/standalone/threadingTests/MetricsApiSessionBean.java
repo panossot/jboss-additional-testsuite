@@ -32,8 +32,8 @@ public class MetricsApiSessionBean {
     }
     
 
-    public void countMethod() {
-        for (int i=0; i<5; i++) {
+    public void countMethod(int repeatCount) {
+        for (int i=0; i<repeatCount; i++) {
             synchronized(metricLock) {
                 metricsClass.setCount(metricsClass.getCount()+1);
             }

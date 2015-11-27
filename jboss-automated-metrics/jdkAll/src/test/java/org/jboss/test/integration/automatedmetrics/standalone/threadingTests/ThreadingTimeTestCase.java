@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
  * @author Panagiotis Sotiropoulos
  */
 @RunWith(Arquillian.class)
-public class ThreadingTestCase {
+public class ThreadingTimeTestCase {
 
     @Inject 
     MetricsClass metricsClass;
@@ -54,7 +54,7 @@ public class ThreadingTestCase {
     @Deployment
     public static Archive<?> getDeployment() {
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
-        archive.addClass(ThreadingTestCase.class);
+        archive.addClass(ThreadingTimeTestCase.class);
         archive.addClass(MetricsApiSessionBean.class);
         archive.addClass(MetricsThreads.class);
         archive.addClass(MetricsClass.class);
@@ -71,64 +71,29 @@ public class ThreadingTestCase {
         initializeMetricProperties();
 
         try {
-            MetricsThreads mTreads =  new MetricsThreads(metricsBean, 5, "1");
-            mTreads.start();
-         
-            MetricsThreads mTreads2 =  new MetricsThreads(metricsBean2, 5, "2");
-            mTreads2.start();
+            MetricsThreads mTreads =  new MetricsThreads(metricsBean, 33333, "1");
+            MetricsThreads mTreads2 =  new MetricsThreads(metricsBean2, 333333, "2");
+            MetricsThreads mTreads3 =  new MetricsThreads(metricsBean2, 333333, "3");
+
             
-            MetricsThreads mTreads3 =  new MetricsThreads(metricsBean2, 5, "3");
+            System.out.println("Starting ... ");
+            long timeInit, timeNow, averageTimeNeeded;
+            
+            timeInit = System.nanoTime();
+            mTreads.start();
+            mTreads2.start();
             mTreads3.start();
             
             while (mTreads.getT().isAlive() || mTreads2.getT().isAlive() || mTreads3.getT().isAlive()){};
             
-            if (MetricsCacheCollection.getMetricsCacheCollection().getMetricsCacheInstance(groupName)!=null)
-                System.out.println(MetricsCacheApi.printMetricsCache(groupName));
+            timeNow = System.nanoTime();
             
-            Set<String> metricNames = MetricsCacheApi.getMetricsCache(groupName).keySet();
-            Iterator<String> iob = metricNames.iterator();
-            while (iob.hasNext()) {
-                String key = iob.next();
-                if (key.contains("count2")) {
-                    ArrayList<Object> comparableObject = new ArrayList<>();
-                    comparableObject.add(2.0);
-                    comparableObject.add(4.0);
-                    comparableObject.add(6.0);
-                    comparableObject.add(8.0);
-                    comparableObject.add(10.0);
-                    comparableObject.add(12.0);
-                    comparableObject.add(14.0);
-                    comparableObject.add(16.0);
-                    comparableObject.add(18.0);
-                    comparableObject.add(20.0);
-                    comparableObject.add(22.0);
-                    comparableObject.add(24.0);
-                    comparableObject.add(26.0);
-                    comparableObject.add(28.0);
-                    comparableObject.add(30.0);
-                    boolean correct = MetricsCacheApi.compareMetricsCacheValuesByKey(groupName, key, comparableObject);
-                    assertTrue("Data are not contained in cache ... ", correct);
-                }else if (key.contains("count")) {
-                    ArrayList<Object> comparableObject = new ArrayList<>();
-                    comparableObject.add(1.0);
-                    comparableObject.add(2.0);
-                    comparableObject.add(3.0);
-                    comparableObject.add(4.0);
-                    comparableObject.add(5.0);
-                    comparableObject.add(6.0);
-                    comparableObject.add(7.0);
-                    comparableObject.add(8.0);
-                    comparableObject.add(9.0);
-                    comparableObject.add(10.0);
-                    comparableObject.add(11.0);
-                    comparableObject.add(12.0);
-                    comparableObject.add(13.0);
-                    comparableObject.add(14.0);
-                    comparableObject.add(15.0);
-                    boolean correct = MetricsCacheApi.compareMetricsCacheValuesByKey(groupName, key, comparableObject);
-                    assertTrue("Data are not contained in cache ... ", correct);
-                }
-            }
+            averageTimeNeeded = (timeNow - timeInit) / (333333*3*2);
+            System.out.println("averageTimeNeeded : " + averageTimeNeeded);
+            System.out.println("Done ...");
+            
+            assertTrue("No data in the cache store ... ", averageTimeNeeded < 6000);
+            
         } catch(Exception e) {
             e.printStackTrace();
             assertFalse("No data in the cache store ... ", true);

@@ -25,12 +25,14 @@ public class MetricsThreads extends Thread {
     private Thread t;
     private String threadName;
     MetricsApiSessionBean metricsBean;
+    private int repeatCount;
     
     private String deploymentName = "myTestDeployment";
 
-   public  MetricsThreads(MetricsApiSessionBean metricsBean, String name) {
+   public  MetricsThreads(MetricsApiSessionBean metricsBean, int repeatCount, String name) {
         threadName = name;
         this.metricsBean = metricsBean;
+        this.repeatCount = repeatCount;
         System.out.println("Creating " + threadName);
     }
 
@@ -39,7 +41,7 @@ public class MetricsThreads extends Thread {
         try {
             System.out.println("Thread: " + threadName);
             
-            metricsBean.countMethod();
+            metricsBean.countMethod(repeatCount);
             
         } catch (Exception e) {
             e.printStackTrace();
