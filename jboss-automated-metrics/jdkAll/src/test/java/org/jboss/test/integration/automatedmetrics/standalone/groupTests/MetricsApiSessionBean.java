@@ -28,7 +28,8 @@ import javax.inject.Inject;
 @LocalBean
 public class MetricsApiSessionBean {
 
-    @Inject MetricsClass metricsClass;
+    @Inject 
+    MetricsClass metricsClass;
 
     public MetricsApiSessionBean() {
     }
