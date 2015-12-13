@@ -14,14 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.integration.automatedmetrics.standalone.threadingTests;
+package org.jboss.test.integration.automatedmetrics.standalone.filterTests;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
+import javax.ejb.EJB;
 import org.jboss.metrics.automatedmetricsapi.MetricsPropertiesApi;
 import org.jboss.metrics.jbossautomatedmetricsproperties.MetricProperties;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.metrics.automatedmetricsapi.CodeParamsApi;
+import org.jboss.metrics.automatedmetricsapi.MetricsCacheApi;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -35,60 +40,52 @@ import static org.junit.Assert.assertTrue;
  * @author Panagiotis Sotiropoulos
  */
 @RunWith(Arquillian.class)
-public class ThreadingTimeTestCase {
+public class MetricFilterTestCase {
 
-    @Inject 
-    MetricsClass metricsClass;
+    @EJB
+    private MetricsApiSessionBean metricsApiSessionBean;
     
     private String groupName = "myTestGroup";
-    
-    MetricsApiSessionBean metricsBean;
-    
-    MetricsApiSessionBean metricsBean2;
 
     @Deployment
     public static Archive<?> getDeployment() {
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
-        archive.addClass(ThreadingTimeTestCase.class);
+        archive.addClass(MetricFilterTestCase.class);
         archive.addClass(MetricsApiSessionBean.class);
-        archive.addClass(MetricsThreads.class);
-        archive.addClass(MetricsClass.class);
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricsproperties");
         archive.addPackage("org.jboss.metrics.automatedmetricsapi");
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricslibrary");
+        archive.addPackage("org.jboss.metrics.jbossautomatedmetricslibrary2");
         archive.addPackage("org.jboss.metrics.automatedmetrics");
         archive.addAsResource("META-INF/beans.xml");
         return archive;
     }
     
     @Test
-    public void threadingTimeTest() {
+    public void metricFilterTest() {
         initializeMetricProperties();
+        metricsApiSessionBean.MetricsApiSessionBean();
 
         try {
-            MetricsThreads mTreads =  new MetricsThreads(metricsBean, 33333, "1");
-            MetricsThreads mTreads2 =  new MetricsThreads(metricsBean2, 333333, "2");
-            MetricsThreads mTreads3 =  new MetricsThreads(metricsBean2, 333333, "3");
-
-            
-            System.out.println("Starting ... ");
-            long timeInit, timeNow, averageTimeNeeded;
-            
-            timeInit = System.nanoTime();
-            mTreads.start();
-            mTreads2.start();
-            mTreads3.start();
-            
-            while (mTreads.getT().isAlive() || mTreads2.getT().isAlive() || mTreads3.getT().isAlive()){};
-            
-            timeNow = System.nanoTime();
-            
-            averageTimeNeeded = (timeNow - timeInit) / (333333*3*2);
-            System.out.println("averageTimeNeeded : " + averageTimeNeeded);
-            System.out.println("Done ...");
-            
-            assertTrue("No data in the cache store ... ", averageTimeNeeded < 6000);
-            
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            Set<String> metricNames = MetricsCacheApi.getMetricsCache(groupName).keySet();
+            Iterator<String> iob = metricNames.iterator();
+            while (iob.hasNext()) {
+                String key = iob.next();
+                if (key.contains("count2")) {
+                    ArrayList<Object> comparableObject = new ArrayList<>();
+                    comparableObject.add(8.0);
+                    boolean notCorrect = MetricsCacheApi.compareMetricsCacheValuesByKey(groupName, key, comparableObject);
+                    assertTrue("Filter did not work ... ", !notCorrect);
+                }
+            }
         } catch(Exception e) {
             e.printStackTrace();
             assertFalse("No data in the cache store ... ", true);
@@ -96,11 +93,10 @@ public class ThreadingTimeTestCase {
     }
 
     private void initializeMetricProperties() {
-        metricsBean = new MetricsApiSessionBean(metricsClass);
-        metricsBean2 = new MetricsApiSessionBean(metricsClass);
-        
         MetricProperties metricProperties = new MetricProperties();
         metricProperties.setCacheStore("true");
+        metricProperties.setFilterMetrics("true");
+        CodeParamsApi.addUserName("Niki");
         MetricsPropertiesApi.storeProperties(groupName, metricProperties);
     }
 }

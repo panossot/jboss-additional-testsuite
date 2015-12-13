@@ -40,6 +40,12 @@
 		    <version>1.0.3.Final-SNAPSHOT</version>
 		    <type>jar</type>
 		</dependency>
+                <dependency>
+                    <groupId>org.jboss.metrics</groupId>
+                    <artifactId>AutomatedMetricsJavaSeApi</artifactId>
+                    <version>1.0.3.Final-SNAPSHOT</version>
+                    <type>jar</type>
+                </dependency>
 		<dependency>
 		    <groupId>javax</groupId>
 		    <artifactId>javaee-api</artifactId>

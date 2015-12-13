@@ -60,7 +60,7 @@ public class CacheStorageTestCase {
     }
     
     @Test
-    public void testServerStart() {
+    public void cacheStorageTest() {
         initializeMetricProperties();
 
         try {

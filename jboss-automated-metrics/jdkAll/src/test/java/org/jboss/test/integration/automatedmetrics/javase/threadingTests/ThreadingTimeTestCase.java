@@ -14,14 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.integration.automatedmetrics.standalone.threadingTests;
+package org.jboss.test.integration.automatedmetrics.javase.threadingTests;
 
-import javax.inject.Inject;
-import org.jboss.metrics.automatedmetricsapi.MetricsPropertiesApi;
 import org.jboss.metrics.jbossautomatedmetricsproperties.MetricProperties;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsPropertiesApi;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -37,7 +36,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Arquillian.class)
 public class ThreadingTimeTestCase {
 
-    @Inject 
     MetricsClass metricsClass;
     
     private String groupName = "myTestGroup";
@@ -54,10 +52,9 @@ public class ThreadingTimeTestCase {
         archive.addClass(MetricsThreads.class);
         archive.addClass(MetricsClass.class);
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricsproperties");
-        archive.addPackage("org.jboss.metrics.automatedmetricsapi");
+        archive.addPackage("org.jboss.metrics.javase.automatedmetricsjavaseapi");
+        archive.addPackage("org.jboss.metrics.automatedmetricsjavase");
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricslibrary");
-        archive.addPackage("org.jboss.metrics.automatedmetrics");
-        archive.addAsResource("META-INF/beans.xml");
         return archive;
     }
     
@@ -96,6 +93,7 @@ public class ThreadingTimeTestCase {
     }
 
     private void initializeMetricProperties() {
+        metricsClass = new MetricsClass();
         metricsBean = new MetricsApiSessionBean(metricsClass);
         metricsBean2 = new MetricsApiSessionBean(metricsClass);
         

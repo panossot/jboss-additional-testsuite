@@ -49,6 +49,12 @@
 		    <version>1.0.3.Final-SNAPSHOT</version>
 		    <type>jar</type>
 		</dependency>
+                <dependency>
+                    <groupId>org.jboss.metrics</groupId>
+                    <artifactId>AutomatedMetricsJavaSeApi</artifactId>
+                    <version>1.0.3.Final-SNAPSHOT</version>
+                    <type>jar</type>
+                </dependency>
 		<dependency>
 		    <groupId>javax</groupId>
 		    <artifactId>javaee-api</artifactId>
@@ -83,6 +89,7 @@
 		                    <!-- Tests to execute. -->
 		                    <includes>
 		                        <include>**/org/jboss/test/integration/automatedmetrics/standalone/**/*TestCase.java</include>
+                                        <include>**/org/jboss/test/integration/automatedmetrics/javase/**/*TestCase.java</include>
 		                    </includes>
 		                </configuration>
 		            </execution>

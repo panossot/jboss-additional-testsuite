@@ -26,7 +26,7 @@ import org.jboss.metrics.jbossautomatedmetricslibrary2.CodeParamsCollection;
  *
  * @author Panagiotis Sotiropoulos
  */
-public class MetricsClass {
+public class SyncDbStoreMetricsClass {
     private static AtomicInteger countAtomic;
     private static int count = 0;
     
@@ -36,20 +36,20 @@ public class MetricsClass {
     
     private CodeParams cp;
 
-    public MetricsClass(){
+    public SyncDbStoreMetricsClass(){
         countAtomic = new AtomicInteger(1);
         i = new AtomicInteger(1);
     }
     
     @Metric(fieldName = {"count"}, groupName = "myTestGroup")
-    @DBStore(groupName = "myTestGroup", queryUpdateDB = {"StoreDBMetric","count"}, statementName = "statement_1")
+    @DBStore(groupName = "myTestGroup", queryUpdateDB = {"StoreDBMetric","count"}, statementName = "statement_1", sync=true)
     public synchronized void getAndSetCountIncreased() {
         count = this.countAtomic.getAndIncrement();
         CodeParamsCollection.getCodeParamsCollection().getCodeParamsInstance(metricUser).putIntegerCodeParam("sequenceNum", i.getAndIncrement());
     }
 
     @Metric(fieldName = {"count2"}, groupName = "myTestGroup")
-    @DBStore(groupName = "myTestGroup", queryUpdateDB = {"StoreDBMetric","count2"}, statementName = "statement_1")
+    @DBStore(groupName = "myTestGroup", queryUpdateDB = {"StoreDBMetric","count2"}, statementName = "statement_1", sync=true)
     public synchronized void getAndSetCount2Increased() {
         count2 = this.count2+2;
         CodeParamsCollection.getCodeParamsCollection().getCodeParamsInstance(metricUser).putIntegerCodeParam("sequenceNum", i.getAndIncrement());

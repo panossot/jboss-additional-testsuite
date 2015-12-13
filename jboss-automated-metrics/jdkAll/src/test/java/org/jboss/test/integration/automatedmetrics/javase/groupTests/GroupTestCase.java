@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.integration.automatedmetrics.standalone.groupTests;
+package org.jboss.test.integration.automatedmetrics.javase.groupTests;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import javax.ejb.EJB;
-import org.jboss.metrics.automatedmetricsapi.MetricsPropertiesApi;
+import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsPropertiesApi;
 import org.jboss.metrics.jbossautomatedmetricsproperties.MetricProperties;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.metrics.automatedmetricsapi.MetricsCacheApi;
+import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsCacheApi;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -54,10 +54,10 @@ public class GroupTestCase {
         archive.addClass(MetricsApiSessionBean.class);
         archive.addClass(MetricsClass.class);
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricsproperties");
-        archive.addPackage("org.jboss.metrics.automatedmetricsapi");
+        archive.addPackage("org.jboss.metrics.javase.automatedmetricsjavaseapi");
+        archive.addPackage("org.jboss.metrics.automatedmetricsjavase");
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricslibrary");
-        archive.addPackage("org.jboss.metrics.automatedmetrics");
-        archive.addAsResource("META-INF/beans.xml");
+        archive.addPackage("org.jboss.metrics.jbossautomatedmetricslibrary2");
         return archive;
     }
     

@@ -67,7 +67,7 @@ public class ThreadingTestCase {
     }
     
     @Test
-    public void testServerStart() {
+    public void threadingTest() {
         initializeMetricProperties();
 
         try {

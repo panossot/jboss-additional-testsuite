@@ -46,7 +46,7 @@ import static org.junit.Assert.assertTrue;
  * @author Panagiotis Sotiropoulos
  */
 @RunWith(Arquillian.class)
-public class DbStoreThreadingTestCase {
+public class AsyncDbStoreThreadingTestCase {
 
     @Inject 
     MetricsClass metricsClass;
@@ -63,7 +63,7 @@ public class DbStoreThreadingTestCase {
     @Deployment
     public static Archive<?> getDeployment() {
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
-        archive.addClass(DbStoreThreadingTestCase.class);
+        archive.addClass(AsyncDbStoreThreadingTestCase.class);
         archive.addClass(MetricsApiSessionBean.class);
         archive.addClass(MetricsThreads.class);
         archive.addClass(MetricsClass.class);
@@ -77,7 +77,7 @@ public class DbStoreThreadingTestCase {
     }
     
     @Test
-    public void testServerStart() {
+    public void asyncDbStoreThreadingTest() {
         initializeMetricProperties();
 
         try {
@@ -90,7 +90,7 @@ public class DbStoreThreadingTestCase {
             MetricsThreads mTreads3 =  new MetricsThreads(metricsBean2, "3");
             mTreads3.start();
             
-            while (mTreads.getT().isAlive() || mTreads2.getT().isAlive() || mTreads3.getT().isAlive()){};
+            Thread.sleep(1000);
             
             if (MetricsCacheCollection.getMetricsCacheCollection().getMetricsCacheInstance(groupName)!=null)
                 System.out.println(MetricsCacheApi.printMetricsCache(groupName));
@@ -115,7 +115,7 @@ public class DbStoreThreadingTestCase {
                 stmt.close();
                 connection.close();
             } catch (SQLException ex) {
-                Logger.getLogger(DbStoreThreadingTestCase.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AsyncDbStoreThreadingTestCase.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

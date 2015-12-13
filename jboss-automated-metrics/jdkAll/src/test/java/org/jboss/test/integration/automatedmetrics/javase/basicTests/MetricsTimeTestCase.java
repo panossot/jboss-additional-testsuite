@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.integration.automatedmetrics.standalone.threadingTests;
+package org.jboss.test.integration.automatedmetrics.javase.basicTests;
 
-import javax.inject.Inject;
-import org.jboss.metrics.automatedmetricsapi.MetricsPropertiesApi;
+import javax.ejb.EJB;
 import org.jboss.metrics.jbossautomatedmetricsproperties.MetricProperties;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsPropertiesApi;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -35,59 +35,51 @@ import static org.junit.Assert.assertTrue;
  * @author Panagiotis Sotiropoulos
  */
 @RunWith(Arquillian.class)
-public class ThreadingTimeTestCase {
+public class MetricsTimeTestCase {
 
-    @Inject 
-    MetricsClass metricsClass;
+    @EJB
+    private MetricsApiSessionBean metricsApiSessionBean;
     
     private String groupName = "myTestGroup";
-    
-    MetricsApiSessionBean metricsBean;
-    
-    MetricsApiSessionBean metricsBean2;
 
     @Deployment
     public static Archive<?> getDeployment() {
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
-        archive.addClass(ThreadingTimeTestCase.class);
+        archive.addClass(MetricsTimeTestCase.class);
         archive.addClass(MetricsApiSessionBean.class);
-        archive.addClass(MetricsThreads.class);
-        archive.addClass(MetricsClass.class);
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricsproperties");
-        archive.addPackage("org.jboss.metrics.automatedmetricsapi");
+        archive.addPackage("org.jboss.metrics.javase.automatedmetricsjavaseapi");
+        archive.addPackage("org.jboss.metrics.automatedmetricsjavase");
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricslibrary");
-        archive.addPackage("org.jboss.metrics.automatedmetrics");
-        archive.addAsResource("META-INF/beans.xml");
         return archive;
     }
     
     @Test
-    public void threadingTimeTest() {
+    public void metricsTimeTest() {
         initializeMetricProperties();
 
         try {
-            MetricsThreads mTreads =  new MetricsThreads(metricsBean, 33333, "1");
-            MetricsThreads mTreads2 =  new MetricsThreads(metricsBean2, 333333, "2");
-            MetricsThreads mTreads3 =  new MetricsThreads(metricsBean2, 333333, "3");
-
-            
             System.out.println("Starting ... ");
-            long timeInit, timeNow, averageTimeNeeded;
-            
+            long timeInit, timeNow, firstRunTimeNeeded, averageTimeNeeded, averageTimeNeededExceptFirstRun;
             timeInit = System.nanoTime();
-            mTreads.start();
-            mTreads2.start();
-            mTreads3.start();
-            
-            while (mTreads.getT().isAlive() || mTreads2.getT().isAlive() || mTreads3.getT().isAlive()){};
-            
+            metricsApiSessionBean.countMethod();
             timeNow = System.nanoTime();
-            
-            averageTimeNeeded = (timeNow - timeInit) / (333333*3*2);
+            firstRunTimeNeeded = timeNow - timeInit;
+
+            for (int i = 0; i < 1000000; i++) {
+                metricsApiSessionBean.countMethod();
+            }
+
+            timeNow = System.nanoTime();
+
+            averageTimeNeeded = (timeNow - timeInit) / 1000001;
+            averageTimeNeededExceptFirstRun = (timeNow - timeInit - firstRunTimeNeeded) / 1000000;
+            System.out.println("firstRunTimeNeeded : " + firstRunTimeNeeded);
             System.out.println("averageTimeNeeded : " + averageTimeNeeded);
+            System.out.println("averageTimeNeededExceptFirstRun : " + averageTimeNeededExceptFirstRun);
             System.out.println("Done ...");
             
-            assertTrue("No data in the cache store ... ", averageTimeNeeded < 6000);
+            assertTrue("No data in the cache store ... ", averageTimeNeededExceptFirstRun < 15000);
             
         } catch(Exception e) {
             e.printStackTrace();
@@ -96,9 +88,6 @@ public class ThreadingTimeTestCase {
     }
 
     private void initializeMetricProperties() {
-        metricsBean = new MetricsApiSessionBean(metricsClass);
-        metricsBean2 = new MetricsApiSessionBean(metricsClass);
-        
         MetricProperties metricProperties = new MetricProperties();
         metricProperties.setCacheStore("true");
         MetricsPropertiesApi.storeProperties(groupName, metricProperties);

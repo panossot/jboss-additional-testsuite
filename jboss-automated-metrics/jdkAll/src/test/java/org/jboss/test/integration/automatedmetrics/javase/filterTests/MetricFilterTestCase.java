@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.test.integration.automatedmetrics.standalone.groupTests;
+package org.jboss.test.integration.automatedmetrics.javase.filterTests;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import javax.ejb.EJB;
-import org.jboss.metrics.automatedmetricsapi.MetricsPropertiesApi;
+import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsPropertiesApi;
 import org.jboss.metrics.jbossautomatedmetricsproperties.MetricProperties;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.metrics.automatedmetricsapi.MetricsCacheApi;
+import org.jboss.metrics.javase.automatedmetricsjavaseapi.CodeParamsApi;
+import org.jboss.metrics.javase.automatedmetricsjavaseapi.MetricsCacheApi;
+import org.jboss.metrics.jbossautomatedmetricslibrary.MetricsCacheCollection;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -39,65 +41,53 @@ import static org.junit.Assert.assertTrue;
  * @author Panagiotis Sotiropoulos
  */
 @RunWith(Arquillian.class)
-public class GroupTestCase {
+public class MetricFilterTestCase {
 
     @EJB
     private MetricsApiSessionBean metricsApiSessionBean;
     
     private String groupName = "myTestGroup";
-    private String groupName2 = "myTestGroup2";
 
     @Deployment
     public static Archive<?> getDeployment() {
         JavaArchive archive = ShrinkWrap.create(JavaArchive.class);
-        archive.addClass(GroupTestCase.class);
+        archive.addClass(MetricFilterTestCase.class);
         archive.addClass(MetricsApiSessionBean.class);
-        archive.addClass(MetricsClass.class);
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricsproperties");
-        archive.addPackage("org.jboss.metrics.automatedmetricsapi");
-        archive.addPackage("org.jboss.metrics.jbossautomatedmetricslibrary");
-        archive.addPackage("org.jboss.metrics.automatedmetrics");
-        archive.addAsResource("META-INF/beans.xml");
+        archive.addPackage("org.jboss.metrics.javase.automatedmetricsjavaseapi");
+        archive.addPackage("org.jboss.metrics.automatedmetricsjavase");
+        archive.addPackage("org.jboss.metrics.jbossautomatedmetricslibrary");;
+        archive.addPackage("org.jboss.metrics.jbossautomatedmetricslibrary2");
         return archive;
     }
     
     @Test
-    public void groupTest() {
+    public void metricFilterTest() {
         initializeMetricProperties();
+        metricsApiSessionBean.MetricsApiSessionBean();
 
         try {
             metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
+            metricsApiSessionBean.countMethod();
             Set<String> metricNames = MetricsCacheApi.getMetricsCache(groupName).keySet();
+            
+            if (MetricsCacheCollection.getMetricsCacheCollection().getMetricsCacheInstance(groupName)!=null)
+                System.out.println(MetricsCacheApi.printMetricsCache(groupName));
+            
             Iterator<String> iob = metricNames.iterator();
             while (iob.hasNext()) {
                 String key = iob.next();
                 if (key.contains("count2")) {
                     ArrayList<Object> comparableObject = new ArrayList<>();
-                    comparableObject.add(2.0);
-                    boolean correct = MetricsCacheApi.compareMetricsCacheValuesByKey(groupName, key, comparableObject);
-                    assertTrue("Data are not contained in cache ... ", correct);
-                }else if (key.contains("count")) {
-                    ArrayList<Object> comparableObject = new ArrayList<>();
-                    comparableObject.add(1.0);
-                    boolean correct = MetricsCacheApi.compareMetricsCacheValuesByKey(groupName, key, comparableObject);
-                    assertTrue("Data are not contained in cache ... ", correct);
-                }
-            }
-            
-            metricNames = MetricsCacheApi.getMetricsCache(groupName2).keySet();
-            iob = metricNames.iterator();
-            while (iob.hasNext()) {
-                String key = iob.next();
-                if (key.contains("count2")) {
-                    ArrayList<Object> comparableObject = new ArrayList<>();
-                    comparableObject.add(2.0);
-                    boolean correct = MetricsCacheApi.compareMetricsCacheValuesByKey(groupName2, key, comparableObject);
-                    assertTrue("Data are not contained in cache ... ", correct);
-                }else if (key.contains("count")) {
-                    ArrayList<Object> comparableObject = new ArrayList<>();
-                    comparableObject.add(1.0);
-                    boolean correct = MetricsCacheApi.compareMetricsCacheValuesByKey(groupName2, key, comparableObject);
-                    assertTrue("Data are not contained in cache ... ", correct);
+                    comparableObject.add(8.0);
+                    boolean notCorrect = MetricsCacheApi.compareMetricsCacheValuesByKey(groupName, key, comparableObject);
+                    assertTrue("Filter did not work ... ", !notCorrect);
                 }
             }
         } catch(Exception e) {
@@ -109,11 +99,9 @@ public class GroupTestCase {
     private void initializeMetricProperties() {
         MetricProperties metricProperties = new MetricProperties();
         metricProperties.setCacheStore("true");
+        metricProperties.setFilterMetrics("true");
+        CodeParamsApi.addUserName("Niki");
         MetricsPropertiesApi.storeProperties(groupName, metricProperties);
-
-        MetricProperties metricProperties2 = new MetricProperties();
-        metricProperties2.setCacheStore("true");
-        MetricsPropertiesApi.storeProperties(groupName2, metricProperties2);
     }
 }
 

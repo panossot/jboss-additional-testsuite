@@ -16,16 +16,12 @@
  */
 package org.jboss.test.integration.automatedmetrics.standalone.basicTests;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Set;
 import javax.ejb.EJB;
 import org.jboss.metrics.automatedmetricsapi.MetricsPropertiesApi;
 import org.jboss.metrics.jbossautomatedmetricsproperties.MetricProperties;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.metrics.automatedmetricsapi.MetricsCacheApi;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -60,7 +56,7 @@ public class MetricsTimeTestCase {
     }
     
     @Test
-    public void testServerStart() {
+    public void metricsTimeTest() {
         initializeMetricProperties();
 
         try {
