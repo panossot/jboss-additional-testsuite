@@ -33,26 +33,26 @@
             <dependencies>
                 <dependency>
 		    <groupId>org.jboss.metrics</groupId>
-		    <artifactId>AutomatedMetrics</artifactId>
-		    <version>1.0.3.Final-SNAPSHOT</version>
+		    <artifactId>automated-metrics</artifactId>
+		    <version>1.0.3.Final</version>
 		    <type>jar</type>
 		    <exclusions>
 		        <exclusion>  <!-- declare the exclusion here -->
 		            <groupId>org.jboss.metrics</groupId>
-		            <artifactId>AutomatedMetricsApi</artifactId>
+		            <artifactId>automated-metrics-api</artifactId>
 		        </exclusion>
 		    </exclusions> 
 		</dependency>
 		<dependency>
 		    <groupId>org.jboss.metrics</groupId>
-		    <artifactId>AutomatedMetricsApi</artifactId>
-		    <version>1.0.3.Final-SNAPSHOT</version>
+		    <artifactId>automated-metrics-api</artifactId>
+		    <version>1.0.3.Final</version>
 		    <type>jar</type>
 		</dependency>
                 <dependency>
                     <groupId>org.jboss.metrics</groupId>
-                    <artifactId>AutomatedMetricsJavaSeApi</artifactId>
-                    <version>1.0.3.Final-SNAPSHOT</version>
+                    <artifactId>automated-metrics-javase-api</artifactId>
+                    <version>1.0.3.Final</version>
                     <type>jar</type>
                 </dependency>
 		<dependency>

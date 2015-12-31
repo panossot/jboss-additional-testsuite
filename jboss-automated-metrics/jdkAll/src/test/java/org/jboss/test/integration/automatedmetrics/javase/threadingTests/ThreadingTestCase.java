@@ -17,6 +17,7 @@
 package org.jboss.test.integration.automatedmetrics.javase.threadingTests;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -59,6 +60,7 @@ public class ThreadingTestCase {
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricsproperties");
         archive.addPackage("org.jboss.metrics.javase.automatedmetricsjavaseapi");
         archive.addPackage("org.jboss.metrics.automatedmetricsjavase");
+        archive.addPackage("org.jboss.metrics.automatedmetricsjavase.utils");
         archive.addPackage("org.jboss.metrics.jbossautomatedmetricslibrary");
         return archive;
     }
@@ -139,6 +141,12 @@ public class ThreadingTestCase {
         
         MetricProperties metricProperties = new MetricProperties();
         metricProperties.setCacheStore("true");
+        HashMap<String,String> rhqScheduleIds = new HashMap<String,String>();
+        rhqScheduleIds.put("count", "11741");
+        rhqScheduleIds.put("count2", "11742");
+        metricProperties.setRhqMonitoring("false");
+        metricProperties.setRhqServerUrl("localhost");
+        metricProperties.setRhqScheduleIds(rhqScheduleIds);
         MetricsPropertiesApi.storeProperties(groupName, metricProperties);
     }
 }
