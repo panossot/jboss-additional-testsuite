@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+     <parent>
+        <groupId>org.jboss.as</groupId>
+        <artifactId>jboss-as-additional-testsuite-modules</artifactId>
+        <version>1.0.1.Final-SNAPSHOT</version>
+        <relativePath>../../../pom.xml</relativePath>
+    </parent>
+
+    <groupId>org.jboss.as</groupId>
+    <artifactId>jboss-as-additional-testsuite-wildfly</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.1.Final-SNAPSHOT</version>
+
+    <name>jboss application server test suite: additional testsuite for wildfly</name>
+    
+    <properties>
+        <surefire.memory.args>-Xmx512m -XX:MaxPermSize=256m</surefire.memory.args>
+        <surefire.system.args>${surefire.memory.args} -Djboss.dist=${project.basedir}/../../../../../wildfly/build/target/jbossas -DjbossHome=${project.basedir}/../../../../../wildfly/build/target/jbossas</surefire.system.args>
+        <jboss.home.env>${project.basedir}/../../../wildfly/build/target/jbossas</jboss.home.env>
+        <jboss.folder>${JBOSS_FOLDER}</jboss.folder>
+    </properties>
+            
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <version>1.0.1.Final</version>
+                </dependency>
+                <dependency>
+		    <groupId>org.wildfly</groupId>
+		    <artifactId>wildfly-arquillian-protocol-jmx</artifactId>
+		    <version>8.2.1.Final</version>
+		</dependency>
+                <dependency>
+                    <groupId>org.jboss.shrinkwrap</groupId>
+                    <artifactId>shrinkwrap-api</artifactId>
+                    <version>1.1.2</version>
+                </dependency>
+                <dependency>
+		    <groupId>org.wildfly</groupId>
+		    <artifactId>wildfly-testsuite-shared</artifactId>
+		    <version>10.0.0.CR4</version>
+		</dependency>
+                <dependency>
+                    <groupId>org.jboss.arquillian.junit</groupId>
+                    <artifactId>arquillian-junit-container</artifactId>
+                    <version>1.1.10.Final</version>
+                </dependency>
+                <dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.3.6</version>
+		</dependency>
+                <dependency>
+                    <groupId>org.jboss.spec.javax.servlet</groupId>
+                    <artifactId>jboss-servlet-api_3.1_spec</artifactId>
+                    <version>1.0.0.Final</version>
+                </dependency>
+            </dependencies>
+            
+            <modules>
+		<module>basic</module>
+		<module>web</module>
+	    </modules>
+
+            <build>
+                <plugins>
+            
+                    <!-- General surefire configuration. Applies to submodules too. -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <!-- Prevent test and server output appearing in console. -->
+                            <redirectTestOutputToFile>${testLogToFile}</redirectTestOutputToFile>
+
+                            <systemPropertyVariables>
+		                <jboss.options>${surefire.system.args}</jboss.options>
+		                <jboss.home>${project.basedir}/../../../../../wildfly/build/target/jbossas</jboss.home>
+                                <module.path>${project.basedir}/../../../../../wildfly/build/target/jbossas/modules</module.path>
+		            </systemPropertyVariables>
+
+                            <!-- Arquillian's config files. -->
+                            <additionalClasspathElements combine.children="append">
+                                <additionalClasspathElement>${basedir}/../../../../../src/test/config/arqWildfly</additionalClasspathElement>
+                            </additionalClasspathElements>
+
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>build-helper-maven-plugin</artifactId>
+			<version>1.10</version>
+			<executions>
+			  <execution>
+			    <id>add-test-source</id>
+			    <phase>generate-test-sources</phase>
+			    <goals>
+			      <goal>add-test-source</goal>
+			    </goals>
+			    <configuration>
+			      <sources>
+				<source>${basedir}/../../../../../src/java/jdkAll</source>
+			      </sources>
+			    </configuration>
+			  </execution>
+			</executions>
+		    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.6</version>
+                        
+                        <executions>
+                            <execution>
+                                <id>prepare</id>
+                                <inherited>false</inherited>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <target>
+                                        <copy todir="../../../wildfly/build/target/jbossas" preservelastmodified="false" overwrite="true" >
+                                            <fileset dir="${jboss.folder}">
+                                                <include name="**/**"/>
+                                            </fileset>
+                                        </copy>                        
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+            
+                </plugins>
+            </build>
+            
+            <repositories>
+		<repository>
+		    <id>central</id>
+		    <name>Main Apache Maven Repository</name>
+		    <url>http://central.maven.org/maven2/</url>
+		    <layout>default</layout>
+		    <releases>
+		        <enabled>true</enabled>
+		        <updatePolicy>never</updatePolicy>
+		    </releases>
+		    <snapshots>
+		        <enabled>false</enabled>
+		        <updatePolicy>never</updatePolicy>
+		    </snapshots>
+		</repository>
+		<repository>
+		    <id>jboss-product-repository</id>
+		    <name>JBoss Product Repository</name>
+		    <url>http://download.eng.bos.redhat.com/brewroot/repos/jb-eap-7.0-rhel-7-maven-build/latest/maven/</url>
+		    <layout>default</layout>
+		    <releases>
+		        <enabled>true</enabled>
+		        <updatePolicy>never</updatePolicy>
+		    </releases>
+		    <snapshots>
+		        <enabled>false</enabled>
+		        <updatePolicy>never</updatePolicy>
+		    </snapshots>
+		</repository>
+		<repository>
+		    <id>jboss-public-repository-group</id>
+		    <name>JBoss Public Repository Group</name>
+		    <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+		    <layout>default</layout>
+		    <releases>
+		        <enabled>true</enabled>
+		        <updatePolicy>never</updatePolicy>
+		    </releases>
+		    <snapshots>
+		        <enabled>true</enabled>
+		        <updatePolicy>never</updatePolicy>
+		    </snapshots>
+		</repository>
+	    </repositories>
+
+	    <pluginRepositories>
+		<pluginRepository>
+		    <id>central</id>
+		    <name>Main Apache Maven Repository</name>
+		    <url>http://central.maven.org/maven2/</url>
+		    <layout>default</layout>
+		    <releases>
+		        <enabled>true</enabled>
+		        <updatePolicy>never</updatePolicy>
+		    </releases>
+		    <snapshots>
+		        <enabled>false</enabled>
+		        <updatePolicy>never</updatePolicy>
+		    </snapshots>
+		</pluginRepository>
+		<pluginRepository>
+		    <id>jboss-product-repository</id>
+		    <name>JBoss Product Repository</name>
+		    <url>http://download.eng.bos.redhat.com/brewroot/repos/jb-eap-7.0-rhel-7-maven-build/latest/maven/</url>
+		    <layout>default</layout>
+		    <releases>
+		        <enabled>true</enabled>
+		        <updatePolicy>never</updatePolicy>
+		    </releases>
+		    <snapshots>
+		        <enabled>false</enabled>
+		        <updatePolicy>never</updatePolicy>
+		    </snapshots>
+		</pluginRepository>
+		<pluginRepository>
+		    <id>jboss-public-repository-group</id>
+		    <name>JBoss Public Repository Group</name>
+		    <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+		    <releases>
+		        <enabled>true</enabled>
+		    </releases>
+		    <snapshots>
+		        <enabled>true</enabled>
+		    </snapshots>
+		</pluginRepository>
+	    </pluginRepositories>
+</project>

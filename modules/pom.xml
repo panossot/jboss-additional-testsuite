@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jboss.as</groupId>
+        <artifactId>jboss-as-additional-testsuite</artifactId>
+        <version>1.0.1.Final-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.jboss.as</groupId>
+    <artifactId>jboss-as-additional-testsuite-modules</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.1.Final-SNAPSHOT</version>
+
+    <name>jboss application server testsuite: additional testsuite modules</name>
+    
+    <properties>
+        <version.junit>4.11</version.junit>
+        <!-- Logging config -->
+        <testLogToFile>true</testLogToFile>
+    </properties>
+    
+    <dependencies>        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>eap.jdk8.testsuite</id>
+            <activation>
+                <property>
+                    <name>eap-jdk8</name>
+                    <value>true</value>
+                </property>
+            </activation>
+
+            <modules>
+                <module>testcases/jdk8/Eap</module>
+	    </modules>
+
+        </profile>
+
+        <profile>
+            <id>eap.testsuite</id>
+            <activation>
+                <property>
+                    <name>eap</name>
+                    <value>true</value>
+                </property>
+            </activation>
+
+            <modules>
+                <module>testcases/jdkAll/Eap</module>
+	    </modules>
+            
+        </profile>
+
+        <profile>
+            <id>wildfly.testsuite</id>
+            <activation>
+                <property>
+                    <name>wildfly</name>
+                    <value>true</value>
+                </property>
+            </activation>
+
+            <modules>
+		<module>testcases/jdkAll/Wildfly</module>
+	    </modules>
+
+        </profile>
+
+        <profile>
+            <id>wildfly.jdk8.testsuite</id>
+            <activation>
+                <property>
+                    <name>wildfly-jdk8</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            
+            <modules>
+                <module>testcases/jdk8/Wildfly</module>
+	    </modules>
+
+        </profile>
+
+        <!-- Replicating the profiles in order to be activated via file existence. This section should be removed when multiple profile activation is supported by maven.-->
+        
+        <profile>
+            <id>eap.jdk8.testsuite.onserver</id>
+            <activation>
+                <file>
+                    <exists>../../eap-jdk8-testsuite</exists>
+                </file>
+            </activation>
+
+            <modules>
+                <module>testcases/jdk8/Eap</module>
+	    </modules>
+
+        </profile>
+
+        <profile>
+            <id>eap.testsuite.onserver</id>
+            <activation>
+                <file>
+                    <exists>../../eap-testsuite</exists>
+                </file>
+            </activation>
+
+            <modules>
+                <module>testcases/jdkAll/Eap</module>
+	    </modules>
+            
+        </profile>
+
+        <profile>
+            <id>wildfly.testsuite.onserver</id>
+            <activation>
+                <file>
+                    <exists>../../wildfly-testsuite</exists>
+                </file>
+            </activation>
+
+            <modules>
+		<module>testcases/jdkAll/Wildfly</module>
+	    </modules>
+
+        </profile>
+
+        <profile>
+            <id>wildfly.jdk8.testsuite.onserver</id>
+            <activation>
+                <file>
+                    <exists>../../wildfly-jdk8-testsuite</exists>
+                </file>
+            </activation>
+
+            <modules>
+                <module>testcases/jdk8/Wildfly</module>
+	    </modules>
+
+        </profile>
+
+    </profiles>
+    
+</project>
