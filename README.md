@@ -25,3 +25,7 @@ TESTING AGAINST EAP OR WILDFLY APPLICATION SERVER USING SPECIFIC JDK VERSION
 
 #License 
 * [GNU Lesser General Public License Version 2.1](http://www.gnu.org/licenses/lgpl-2.1-standalone.html)
+
+<br/>
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/panossot/jboss-additional-testsuite/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
