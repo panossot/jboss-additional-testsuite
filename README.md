@@ -29,3 +29,7 @@ TESTING AGAINST EAP OR WILDFLY APPLICATION SERVER USING SPECIFIC JDK VERSION
 <br/>
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/panossot/jboss-additional-testsuite/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/panossot/jboss-additional-testsuite/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
