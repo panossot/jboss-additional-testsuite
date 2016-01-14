@@ -66,6 +66,7 @@
             <modules>
 		<module>basic</module>
 		<module>web</module>
+                <module>logging</module>
 	    </modules>
 
             <build>
