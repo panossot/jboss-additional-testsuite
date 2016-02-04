@@ -23,7 +23,31 @@
         <testLogToFile>true</testLogToFile>
     </properties>
     
-    <dependencies>        
+    <dependencies>
+        <dependency>
+	    <groupId>org.jboss.metrics</groupId>
+	    <artifactId>automated-metrics</artifactId>
+	    <version>1.0.4.Final-SNAPSHOT</version>
+	    <type>jar</type>
+	    <exclusions>
+	        <exclusion>  <!-- declare the exclusion here -->
+	            <groupId>org.jboss.metrics</groupId>
+	            <artifactId>automated-metrics-api</artifactId>
+	        </exclusion>
+	    </exclusions> 
+	</dependency>
+	<dependency>
+	    <groupId>org.jboss.metrics</groupId>
+	    <artifactId>automated-metrics-api</artifactId>
+	    <version>1.0.4.Final-SNAPSHOT</version>
+	    <type>jar</type>
+	</dependency>
+        <dependency>
+            <groupId>org.jboss.metrics</groupId>
+            <artifactId>automated-metrics-javase-api</artifactId>
+            <version>1.0.4.Final-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>           
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
